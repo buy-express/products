@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products Grid</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- Page Title -->
+    <h1 class="text-3xl font-bold mb-6">Our Products</h1>
+
+    <!-- Search -->
+    <input id="searchInput" type="text" placeholder="Search products..." 
+      class="w-full mb-6 px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300">
+
+    <!-- Grid -->
+    <div id="productGrid" 
+         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      
+      <!-- Example product cards -->
+      <div class="product-card" data-title="Cool Gadget">
+        <a href="https://s.click.aliexpress.com/e/_oEurygl" target="_blank" 
+           class="block bg-white rounded-xl shadow hover:shadow-lg overflow-hidden">
+          <img src="//ae01.alicdn.com/kf/S1ae9ca52afef42f78de0ea152b666b6ca.png_350x350.png" 
+               alt="Cool Gadget" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h2 class="text-lg font-semibold mb-1">Cool Gadget</h2>
+            <p class="text-sm text-gray-500">Short description here.</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="product-card" data-title="Smart Watch">
+        <a href="https://example.com" target="_blank" 
+           class="block bg-white rounded-xl shadow hover:shadow-lg overflow-hidden">
+          <img src="//ae01.alicdn.com/kf/S1ae9ca52afef42f78de0ea152b666b6ca.png_350x350.png" 
+               alt="Smart Watch" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h2 class="text-lg font-semibold mb-1">Smart Watch</h2>
+            <p class="text-sm text-gray-500">Short description here.</p>
+          </div>
+        </a>
+      </div>
+
+      <div class="product-card" data-title="Wireless Earbuds">
+        <a href="https://example.com" target="_blank" 
+           class="block bg-white rounded-xl shadow hover:shadow-lg overflow-hidden">
+          <img src="//ae01.alicdn.com/kf/S1ae9ca52afef42f78de0ea152b666b6ca.png_350x350.png" 
+               alt="Wireless Earbuds" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <h2 class="text-lg font-semibold mb-1">Wireless Earbuds</h2>
+            <p class="text-sm text-gray-500">Short description here.</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- add more product-card divs for SEO -->
+      
+    </div>
+
+    <!-- Pagination -->
+    <div id="pagination" class="flex justify-center mt-8 space-x-2">
+      <button id="prevBtn" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Prev</button>
+      <button id="nextBtn" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Next</button>
+    </div>
+  </div>
+
+<script>
+  // --- CONFIG ---
+  const productsPerPage = 8; // number of products per page
+  let currentPage = 1;
+
+  // --- ELEMENTS ---
+  const searchInput = document.getElementById('searchInput');
+  const grid = document.getElementById('productGrid');
+  const productCards = Array.from(grid.querySelectorAll('.product-card'));
+  const paginationContainer = document.getElementById('pagination');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  // --- RENDER FUNCTION ---
+  function renderProducts() {
+    const term = searchInput.value.toLowerCase();
+    const filtered = productCards.filter(card =>
+      card.dataset.title.toLowerCase().includes(term)
+    );
+
+    const totalPages = Math.ceil(filtered.length / productsPerPage);
+    if (currentPage > totalPages) currentPage = totalPages || 1;
+    const start = (currentPage - 1) * productsPerPage;
+    const end = start + productsPerPage;
+
+    // Show/hide cards
+    productCards.forEach(card => card.style.display = 'none');
+    filtered.slice(start, end).forEach(card => card.style.display = '');
+
+    // Hide or show pagination
+    if (totalPages <= 1) {
+      paginationContainer.style.display = 'none';
+    } else {
+      paginationContainer.style.display = 'flex';
+      prevBtn.disabled = currentPage === 1;
+      nextBtn.disabled = currentPage === totalPages;
+    }
+  }
+
+  // --- EVENTS ---
+  searchInput.addEventListener('input', () => {
+    currentPage = 1;
+    renderProducts();
+  });
+
+  prevBtn.addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderProducts();
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentPage++;
+    renderProducts();
+  });
+
+  // --- INITIAL RENDER ---
+  renderProducts();
+</script>
+
+</body>
+</html>
